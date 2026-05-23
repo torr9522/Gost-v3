@@ -18,6 +18,15 @@
 
 > 注：当前脚本已升级为 gost v3 方案，配置文件改为 YAML，并继续兼容脚本保存的旧规则格式
 
+## 文档索引
+
+- 菜单树：`docs/MENU_TREE.md`
+- 功能矩阵：`docs/FEATURE_MATRIX.md`
+- HTTPS 指南：`docs/HTTPS_GUIDE.md`
+- 架构说明：`docs/ARCHITECTURE.md`
+- 二开说明：`docs/SECONDARY_DEVELOPMENT.md`
+- 发布清单：`docs/PUBLISH_CHECKLIST.md`
+
 ## 功能
 
 ### 原脚本功能
