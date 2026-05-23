@@ -8,12 +8,12 @@
 ## 简介
 
 > 项目地址及帮助文档:  
-> https://github.com/torr9522/Multi-EasyGost-v3
+> https://github.com/torr9522/Gost-v3
 ***
 ## 脚本
 
 * 启动脚本  
-  `curl -fsSL -o gost.sh https://raw.githubusercontent.com/torr9522/Multi-EasyGost-v3/main/gost.sh && chmod +x gost.sh && ./gost.sh`  
+  `curl -fsSL -o gost.sh https://raw.githubusercontent.com/torr9522/Gost-v3/main/gost.sh && chmod +x gost.sh && ./gost.sh`  
 * 再次运行本脚本只需要输入`./gost.sh`回车即可  
 
 > 注：当前脚本已升级为 gost v3 方案，配置文件改为 YAML，并继续兼容脚本保存的旧规则格式
