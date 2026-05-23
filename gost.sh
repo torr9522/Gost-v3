@@ -1614,6 +1614,11 @@ main_menu() {
 }
 
 main() {
+  if [[ -z "$(current_gost_version)" ]]; then
+    Install_ct
+    return 0
+  fi
+
   main_menu
   read -r -e -p " 请输入数字 [1-11]: " num
   case "${num}" in
