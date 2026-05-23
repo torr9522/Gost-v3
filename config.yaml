@@ -1,0 +1,7 @@
+services:
+  - name: placeholder
+    addr: 127.0.0.1:65532
+    handler:
+      type: udp
+    listener:
+      type: udp

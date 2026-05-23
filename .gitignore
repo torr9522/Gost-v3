@@ -1,0 +1,12 @@
+.idea/
+.DS_Store
+*.log
+*.swp
+*.swo
+*.tmp
+tmp/
+dist/
+build/
+/.acme.sh/
+/.env
+/.env.*
