@@ -35,10 +35,7 @@
 
 ## UFW 相关
 
-- `collect_required_tcp_ports`
-- `ensure_ufw_rule`
-- `delete_ufw_rule`
-- `sync_ufw_ports`
+- `ensure_http_challenge_port`
 
 ## 建议的二开方式
 
@@ -48,5 +45,5 @@
   - `parse_rule_record`
   - `append_rule`
   - `show_all_conf`
-- 不要直接在多个菜单分支里重复写 `systemctl restart gost` 或 `ufw` 逻辑。
+- 不要直接在多个菜单分支里重复写 `systemctl restart gost` 或证书申请前的 `80/tcp` 放行逻辑。
   - 统一走 `rebuild_and_restart_gost`。

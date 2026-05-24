@@ -54,7 +54,7 @@
 - 支持 HTTPS 代理自动申请域名证书
 - 支持 HTTPS 代理自动申请 IP 证书（Let’s Encrypt shortlived）
 - 证书安装后自动重载 gost，续期时自动执行 reloadcmd
-- 新增或删除规则时自动同步 UFW 放行对应 TCP 端口
+- 仅在证书申请阶段检测并补开 `80/tcp`（当 `ufw` 处于 active 状态时）
 - 当前安装源已切换到官方 `go-gost/gost` v3 发布版
 
 ## 功能展示

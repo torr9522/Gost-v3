@@ -47,9 +47,9 @@ https/443#proxy.example.com#auth|admin|123456|/root/gost_cert/domain/proxy.examp
 https/36569#45.77.246.87#noauth|||/root/gost_cert/ip/45.77.246.87/cert.pem|/root/gost_cert/ip/45.77.246.87/key.pem|ip
 ```
 
-## UFW 同步规则
+## UFW 行为
 
-- 每次重建配置时，脚本会统一同步 `ufw`。
-- 会放行 `rawconf` 中实际需要的业务 TCP 端口。
-- 如果存在 HTTPS 规则，会额外确保 `80/tcp` 放行，供 ACME `HTTP-01` 使用。
-- 不会自动删除 `22/tcp`，避免把 SSH 锁死。
+- 当前脚本不再接管业务端口的 `ufw` 放行。
+- 默认假设业务端口是否开放由宿主机自身网络策略决定。
+- 仅在证书申请阶段，如果检测到 `ufw` 处于 `active` 状态，脚本会尝试补开 `80/tcp`，供 ACME `HTTP-01` 使用。
+- 如果 `ufw` 处于 `inactive`，脚本不会主动启用它。

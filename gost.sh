@@ -119,72 +119,11 @@ has_ufw() {
   command -v ufw >/dev/null 2>&1
 }
 
-ensure_ufw_rule() {
-  local port="$1"
-  [[ -z "${port}" ]] && return 0
-  has_ufw || return 0
-  ufw status | grep -qE "^[[:space:]]*${port}/tcp[[:space:]]+ALLOW IN" && return 0
-  ufw allow "${port}/tcp" >/dev/null 2>&1 || true
-}
-
-delete_ufw_rule() {
-  local port="$1"
-  [[ -z "${port}" ]] && return 0
-  [[ "${port}" == "22" ]] && return 0
-  has_ufw || return 0
-  ufw status | grep -qE "^[[:space:]]*${port}/tcp[[:space:]]+ALLOW IN" || return 0
-  ufw --force delete allow "${port}/tcp" >/dev/null 2>&1 || true
-}
-
-collect_required_tcp_ports() {
-  ensure_rawconf_file
-  awk '
-    {
-      split($0, parts, "#")
-      split(parts[1], tl, "/")
-      type=tl[1]
-      listen=tl[2]
-      if (type == "nonencrypt" || type == "encrypttls" || type == "encryptws" || type == "encryptwss" || type == "peerno" || type == "peertls" || type == "peerws" || type == "peerwss" || type == "cdnno" || type == "cdnws" || type == "cdnwss" || type == "decrypttls" || type == "decryptws" || type == "decryptwss" || type == "ss" || type == "socks" || type == "http" || type == "https") {
-        if (listen != "") print listen
-      }
-    }
-  ' "${raw_conf_path}" | sort -u
-}
-
-sync_ufw_ports() {
-  local -a desired_ports=()
-  local -a current_ports=()
-  local port
-
-  has_ufw || return 0
-
-  while IFS= read -r port; do
-    [[ -n "${port}" ]] && desired_ports+=("${port}")
-  done < <(collect_required_tcp_ports)
-
-  if grep -q '^https/' "${raw_conf_path}" 2>/dev/null; then
-    desired_ports+=("80")
-  fi
-
-  mapfile -t desired_ports < <(printf '%s\n' "${desired_ports[@]}" | awk 'NF' | sort -u)
-  mapfile -t current_ports < <(ufw status | awk '/ALLOW IN/ && $1 ~ /^[0-9]+\/tcp$/ { split($1, a, "/"); print a[1] }' | sort -u)
-
-  for port in "${desired_ports[@]}"; do
-    [[ "${port}" == "22" ]] && continue
-    ensure_ufw_rule "${port}"
-  done
-
-  for port in "${current_ports[@]}"; do
-    [[ -z "${port}" ]] && continue
-    [[ "${port}" == "22" ]] && continue
-    if ! printf '%s\n' "${desired_ports[@]}" | grep -qx "${port}"; then
-      delete_ufw_rule "${port}"
-    fi
-  done
-}
-
 ensure_http_challenge_port() {
-  ensure_ufw_rule "80"
+  has_ufw || return 0
+  ufw status | grep -qE 'Status: inactive' && return 0
+  ufw status | grep -qE '^[[:space:]]*80/tcp[[:space:]]+ALLOW IN' && return 0
+  ufw allow 80/tcp >/dev/null 2>&1 || true
 }
 
 cert_base_dir() {
@@ -1075,7 +1014,6 @@ add_rule_interactive() {
 
 rebuild_and_restart_gost() {
   render_config
-  sync_ufw_ports
   systemctl restart gost
 }
 
